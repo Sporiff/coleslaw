@@ -1,4 +1,4 @@
-(:eval-when (:compile-toplevel :load-toplevel)
+(eval-when (:compile-toplevel :load-toplevel)
   (ql:quickload :chirp))
 
 (defpackage :coleslaw-twitter
@@ -37,9 +37,9 @@ coleslaw:post and returns the tweet content.")
            (rest (assoc x *tweet-format-dsl-mapping*))))
     (lambda (post)
       (apply #'format nil "~{~A~^ ~}"
-             (loop for item in *tweet-format*
+             (loop for item in tweet-format
                 unless (or (keywordp item) (stringp item))
-                  (error 'malformed-tweet-format :item item)
+                  do (error 'malformed-tweet-format :item item)
                 when (keywordp item)
                   collect (funcall (accessor-for item) post)
                 when (stringp item)
